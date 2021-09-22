@@ -66,7 +66,6 @@ class PriceListScreen extends Screen
         try {
             foreach ($request->get('service') ?? [] as $service_id => $values) {
                 Service::where('id', $service_id)->update(['price' => $values]);
-
             }
             Toast::info(__("crud.update_success"));
             return redirect()->back();
