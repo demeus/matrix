@@ -4,15 +4,12 @@ namespace App\Orchid\Screens\Price;
 
 use App\Models\Price;
 use App\Models\Service;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Orchid\Screen\Action;
 use Orchid\Screen\Actions\Button;
-use Orchid\Screen\Fields\DateTimer;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Matrix;
-use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
@@ -60,7 +57,6 @@ class PriceListScreen extends Screen
      */
     public function layout(): array
     {
-
         return $this->getServicesPrice();
     }
 
@@ -68,10 +64,9 @@ class PriceListScreen extends Screen
     public function save(Request $request): RedirectResponse
     {
         try {
-            foreach ($request->get('service') ?? [] as $service_id => $values){
-                foreach ($values as $row){
-                    Service::where('id', $service_id)->update(['price' => $row]);
-                }
+            foreach ($request->get('service') ?? [] as $service_id => $values) {
+                Service::where('id', $service_id)->update(['price' => $values]);
+
             }
             Toast::info(__("crud.update_success"));
             return redirect()->back();
@@ -92,10 +87,11 @@ class PriceListScreen extends Screen
                         Matrix::make('service.'.$service->id)
                             ->columns(
                                 [
-                                'Title' => 'title',
-                                'Price' => 'price',
-                              ]
+                                    'Title' => 'title',
+                                    'Price' => 'price',
+                                ]
                             )
+                            ->value($service->price)
                             ->fields(
                                 [
                                     'title' => Input::make()->name("title"),
@@ -105,7 +101,6 @@ class PriceListScreen extends Screen
 
                     ]
                 )->title($service->title);
-
         }
         return $matrix;
     }

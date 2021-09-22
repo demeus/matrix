@@ -42,6 +42,6 @@ class Service extends Model
 
     protected $casts = [
         'active' => 'boolean',
-        'price' => 'array',
+        'price' => 'json',
     ];
 }
